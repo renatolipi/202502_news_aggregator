@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "202502_news_aggregator"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^5.1.6"
+celery = "^5.4.0"
+kombu = "^5.4.2"
+beautifulsoup4 = "^4.13.3"
+requests = "^2.32.3"
+flower = "^2.0.1"
+selenium = "^4.28.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
