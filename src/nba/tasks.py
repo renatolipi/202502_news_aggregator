@@ -1,11 +1,14 @@
-
+import logging
 
 from bs4 import BeautifulSoup as BS
-
+from celery import shared_task
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as  EC
+
+
+logger = logging.getLogger(__name__)
 
 
 CLASS_NAME = 'TransactionSingle_desc__uG447'
@@ -32,12 +35,13 @@ def _get_specific_ajax_content():
     return answer
 
 
+@shared_task
 def get_players_transactions():
+    logger.info("Starting task get_players_transactions")
+
     response = _get_specific_ajax_content()
     if not response:
-        # TODO
-        # log
-        print(f'Nothing was found: {response}')
+        logger.warning(f'Nothing was found: {response}')
         return
 
     soup = BS(response, 'html.parser')
@@ -50,3 +54,4 @@ def get_players_transactions():
     # TODO
     # Save it all on database or send it somewhere else.
     print(transactions_headlines)
+    logger.debug(f"transactions: {transactions_headlines}")

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "nba",
 ]
 
 MIDDLEWARE = [
@@ -123,8 +124,43 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+
+# LOGSy
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'celery': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
 # Celery
 CELERY_BROKER_URL = 'sqla+sqlite:///db.sqlite3'  # using SQLite as the broker
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_BACKEND = 'db+sqlite3:///results.sqlite3'  # store task results in SQLite (using as database)
+CELERY_RESULT_BACKEND = 'db+sqlite:///results.sqlite3'   # store task results in SQLite (using as database)
+
+
+CELERY_BEAT_SCHEDULE = {
+    'scrape-every-hour': {
+        'task': 'nba.tasks.get_players_transactions',
+        # 'schedule': 3600,  # time in seconds
+        'schedule': 30,  # TODO remove testing
+    }
+}
